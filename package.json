@@ -1,5 +1,5 @@
 {
-	"name": "obsidian-usher-dev",
+	"name": "obsidian-usher",
 	"version": "0.0.1",
 	"description": "The overridden config directory manager for Obsidian",
 	"main": "main.js",
