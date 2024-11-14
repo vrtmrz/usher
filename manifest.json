@@ -1,0 +1,10 @@
+{
+	"id": "obsidian-usher-dev",
+	"name": "Usher (Dev)",
+	"version": "0.0.1",
+	"minAppVersion": "0.15.0",
+	"description": "The overridden config directory manager for Obsidian",
+	"author": "vorotamoroz",
+	"authorUrl": "https://github.com/vrtmrz",
+	"isDesktopOnly": false
+}
