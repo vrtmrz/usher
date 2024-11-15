@@ -3,7 +3,7 @@
 	"name": "Usher",
 	"version": "0.0.2",
 	"minAppVersion": "0.15.0",
-	"description": "The overridden config directory manager for Obsidian",
+	"description": "The overridden config directory manager",
 	"author": "vorotamoroz",
 	"authorUrl": "https://github.com/vrtmrz",
 	"isDesktopOnly": false
