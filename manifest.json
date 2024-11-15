@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-usher",
 	"name": "Usher",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"minAppVersion": "0.15.0",
 	"description": "The overridden config directory manager for Obsidian",
 	"author": "vorotamoroz",
