@@ -17,7 +17,8 @@ export class UsherSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl("h2", { text: "Compare Control" });
+		new Setting(containerEl).setName("Comparison Control").setHeading();
+
 		const ignoreEl = new Setting(containerEl).setName("Ignore files");
 
 		mount(MultipleRegExpControl, {
@@ -53,7 +54,8 @@ export class UsherSettingTab extends PluginSettingTab {
 				},
 			},
 		});
-		containerEl.createEl("h2", { text: "Utility" });
+
+		new Setting(containerEl).setName("Utility").setHeading();
 
 		let configFolder = "";
 		new Setting(containerEl)
