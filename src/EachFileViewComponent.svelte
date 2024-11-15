@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { FileInfo, ItemInfo, SummaryInfo } from "./types";
+	import type { ItemInfo, SummaryInfo } from "./types";
 	import { unique } from "octagonal-wheels/collection";
 
 	import {
@@ -12,10 +12,8 @@
 	import type { Writable } from "svelte/store";
 	import { thisDeviceDir, selectedItems } from "./runestore.svelte";
 	import { eventHub } from "./events";
-	import { notice } from "octagonal-wheels/common/logger";
 	import { Notice } from "obsidian";
 	import { vaultManager } from "./VaultManager";
-	import { normalize } from "path";
 
 	interface Props {
 		key: string;
@@ -262,10 +260,10 @@
 			return ``;
 		}
 		if (compareResult.JsonMergeResult == "same") {
-			return `=${MARK_JSON} Merged JSON is the same`;
+			return `=${MARK_JSON}Merged JSON is the same`;
 		}
 		if (compareResult.JsonMergeResult == "different") {
-			return `<${MARK_JSON} Merged JSON is different`;
+			return `<${MARK_JSON}Merged JSON is different`;
 		}
 		return "";
 	});
@@ -376,8 +374,11 @@
 							new Notice(`Failed to copy ${item.name}`);
 						}
 					}
-				} finally {
 					notify.setMessage(`${line1} Done.`);
+					selectedDevice = "";
+				} catch (e) {
+					notify.setMessage(`${line1} Failed\n${e.toString()}.`);
+				} finally {
 					setTimeout(() => notify.hide(), 5000);
 				}
 			} else {
@@ -387,15 +388,22 @@
 			off();
 		};
 	});
+	const radioID = `radio-${key}-${targetDevice}`;
 </script>
 
 <!-- <span class="file-row"> -->
 {#snippet renderChip(chip: string)}
+	{#if chip.trim() != ""}
 	{@const symbol = chip[0]}
 	{@const symbolStyle =
 		symbol == "=" ? "same" : symbol == "<" ? "new" : "old"}
-	{@const content = chip.slice(1)}
-	<span class="chip {symbolStyle}">{content}</span>
+		{@const mark = [...chip][1]}
+		{@const content = [...chip].slice(2).join("")}
+		<span class="usher-chip {symbolStyle}" data-mark={mark}>
+			<span class="usher-chip-mark">{mark}</span>
+			<span class="usher-chip-content"></span>{content}</span
+		>
+	{/if}
 {/snippet}
 {#snippet result()}
 	<span class="result">
@@ -420,14 +428,18 @@
 			{/if}
 		</div>
 	</th>
-
-	<td class="col-selector">
-		<label class="device">
+	<td class="col-selector-radio">
+		<label class="device" for={radioID}>
 			<input
+				id={radioID}
 				type="radio"
 				bind:group={selectedDevice}
 				value={targetDevice}
 			/>
+		</label>
+	</td>
+	<td class="col-selector">
+		<label class="device" for={radioID}>
 			{targetDevice}
 		</label>
 	</td>
@@ -462,32 +474,6 @@
 		display: inline-flex;
 	}
 
-	.chip {
-		display: inline-block;
-		border-radius: 2px;
-		font-size: 0.8em;
-		padding: 0 4px;
-		margin: 0 2px;
-		border: 1px solid var(--tag-color);
-		border-radius: var(--radius-m);
-	}
-	.chip.new {
-		background-color: var(--tag-background);
-		color: var(--text-muted);
-	}
-	.chip.old {
-		color: var(--tag-color);
-	}
-	.chip.same {
-		color: var(--tag-color);
-	}
-	.chip:empty {
-		display: none;
-	}
-	.chip:not(:empty)::before {
-		min-width: 1.8em;
-		display: inline-block;
-	}
 	.filename {
 		max-width: 10em;
 		word-break: break-all;

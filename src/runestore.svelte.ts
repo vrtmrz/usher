@@ -26,7 +26,6 @@ export function setThisDeviceDir(dir: string) {
 export const nameMap = writable(new Map<string, string>());
 export const infoMap = writable(new Map<string, ItemInfo>());
 
-
 export function setInfoMap(map: Map<string, ItemInfo>) {
 	infoMap.set(map);
 }
@@ -36,3 +35,18 @@ export function setNameMap(map: Map<string, string>) {
 }
 
 export const onlyNew = writable<boolean>(true);
+
+export const nonAutomatic = writable(new Set<string>());
+
+export function setNonAutomatic(item: string) {
+	nonAutomatic.update((old) => {
+		old.add(item);
+		return old;
+	});
+}
+export function unsetNonAutomatic(item: string) {
+	nonAutomatic.update((old) => {
+		old.delete(item);
+		return old;
+	});
+}

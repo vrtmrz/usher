@@ -60,7 +60,10 @@
 		<th colspan="1" class="th-item-file-name">
 			{caption}
 		</th>
-		<td colspan="3">No candidates.</td>
+		<td></td>
+		<td colspan="2">
+			<span class="usher-chip same"> No candidates </span></td
+		>
 	</tr>
 {:else}
 	{#if caption}
@@ -92,6 +95,7 @@
 			{category}
 			{fileCategory}
 			hideHeader={true}
+			verboseMode={false}
 		/>
 	{:else}
 		{#each files as file}
@@ -102,6 +106,7 @@
 				{fileCategory}
 				{category}
 				hideHeader={!canSummarize}
+				verboseMode={true}
 			/>
 		{/each}
 	{/if}

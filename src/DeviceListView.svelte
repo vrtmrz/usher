@@ -8,6 +8,7 @@
 	import { eventHub } from "./events";
 	import AutoSelectButtons from "./components/AutoSelectButtons.svelte";
 	import {
+		nonAutomatic,
 		selectItem,
 		thisDeviceDir,
 		unselectItem,
@@ -20,9 +21,17 @@
 		fileCategory: string;
 		file?: string;
 		hideHeader?: boolean;
+		verboseMode?: boolean;
 	}
-	const { key, items, file, category, fileCategory, hideHeader }: Props =
-		$props();
+	const {
+		key,
+		items,
+		file,
+		category,
+		fileCategory,
+		hideHeader,
+		verboseMode,
+	}: Props = $props();
 
 	const thisDevice = $derived(thisDeviceDir);
 	const devices = $derived.by(() => {
@@ -138,12 +147,13 @@
 	let deviceCompareInfo = $state({} as Record<string, SummaryInfo>);
 
 	const ephemeralCategory = Math.random().toString(36);
-
+	const nonAutomaticKeys = $derived($nonAutomatic);
 	function categoryShouldHandle(targetCategory: string) {
 		return (
-			targetCategory === "all" ||
-			targetCategory === category ||
-			targetCategory === ephemeralCategory
+			(targetCategory === "all" ||
+				targetCategory === category ||
+				targetCategory === ephemeralCategory) &&
+			!nonAutomaticKeys.has(key)
 		);
 	}
 	const isJson = $derived.by(() => {
@@ -207,13 +217,16 @@
 	<tr class={`${currentSelectedDevice != "" ? "selected" : ""}`}>
 		<td colspan="2"></td>
 		<td colspan="3">
-			<div class="buttons">
-				<AutoSelectButtons
-					category={ephemeralCategory}
-					{hasManifest}
-					{isJson}
-				/>
-			</div>
+			{#if !hideHeader || category === "plugin"}
+				<div class="buttons">
+					<AutoSelectButtons
+						category={ephemeralCategory}
+						{hasManifest}
+						{isJson}
+						key={verboseMode ? undefined : key}
+					/>
+				</div>
+			{/if}
 		</td>
 	</tr>
 	{#each devices as device}
@@ -230,9 +243,14 @@
 	{/each}
 {:else}
 	<tr class="empty">
-		<td colspan="3">No candidates.</td>
+		<td colspan="3"><span class="usher-chip same"> no candidates </span></td
+		>
 	</tr>
 {/if}
 
 <style>
+	.buttons {
+		display: flex;
+		align-items: center;
+	}
 </style>

@@ -86,7 +86,9 @@
 	.main-buttons {
 		z-index: var(--layer-cover);
 		position: sticky;
-		top: 0;
+		top: -1em;
+		border-top: 1em solid var(--background-primary);
+		margin-top: -1em;
 		display: flex;
 		flex-direction: column;
 		background-color: var(--background-primary);

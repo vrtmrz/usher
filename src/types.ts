@@ -1,15 +1,15 @@
 import type { PluginManifest } from "obsidian";
 
-
-
 export interface UsherSettings {
 	ignoreFilePatterns: string;
 	nonMergeJsonPatterns: string;
+	nonAutomatic: string[];
 }
 
 export const DEFAULT_SETTINGS: UsherSettings = {
 	ignoreFilePatterns: "/node_modules$|[]|/.git$",
 	nonMergeJsonPatterns: "bookmark.json$",
+	nonAutomatic: [],
 };
 
 export type FileInfo = {
@@ -18,7 +18,6 @@ export type FileInfo = {
 	mtime: number;
 	ctime: number;
 };
-
 
 export type ManifestInfo = {
 	name: string;
@@ -43,13 +42,12 @@ export type ItemInfo = {
 export const VIEW_TYPE = "usher-view";
 
 export type EachSummaryInfo = {
-	maxMTime: number,
-	version: string,
-	maxMTimeIfNotMatched: number,
-	maxMTimeConfig: number,
+	maxMTime: number;
+	version: string;
+	maxMTimeIfNotMatched: number;
+	maxMTimeConfig: number;
 };
 export type SummaryInfo = {
-	total: EachSummaryInfo,
+	total: EachSummaryInfo;
 	newer: EachSummaryInfo;
-
 };

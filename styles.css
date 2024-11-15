@@ -1,0 +1,37 @@
+.usher-chip {
+	display: inline-flex;
+	border-radius: 2px;
+	font-size: 0.8em;
+	padding: 0 4px;
+	margin: 1px 2px;
+	border: 1px solid var(--tag-color);
+	border-radius: var(--radius-m);
+	font-weight: initial;
+	flex-direction: row;
+}
+
+.usher-chip-mark {
+	margin-right: 0.25em;
+}
+
+.usher-chip.new {
+	background-color: var(--tag-background);
+	color: var(--text-muted);
+}
+
+.usher-chip.old {
+	color: var(--tag-color);
+}
+
+.usher-chip.same {
+	color: var(--tag-color);
+}
+
+.usher-chip:empty {
+	display: none;
+}
+
+.usher-chip:not(:empty)::before {
+	min-width: 1.8em;
+	display: inline-block;
+}

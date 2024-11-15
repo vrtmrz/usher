@@ -18,9 +18,7 @@ export function timeDiffToHumanReadable(timeDiffX: number) {
 	if (minutes > 0) return `${oldNew}${minutes}m${seconds}s`;
 	if (seconds == 0) return "±0";
 	return `${oldNew}${seconds}s`;
-
 }
-
 
 import { vaultManager } from "./VaultManager";
 import { isObjectDifferent } from "octagonal-wheels/object";
@@ -35,11 +33,10 @@ export type CompareResult = {
 	JsonMergeResult: "not-json" | "same" | "different";
 };
 export function subtractTimeInLimitedResolution(time1: number, time2: number) {
-	const time1x = (~~(time1 / 2000)) * 2000;
-	const time2x = (~~(time2 / 2000)) * 2000;
+	const time1x = ~~(time1 / 2000) * 2000;
+	const time2x = ~~(time2 / 2000) * 2000;
 	return time1x - time2x;
 }
-
 
 export function mergeObject(
 	objA: object | Record<string | number | symbol, unknown> | [],
@@ -84,7 +81,7 @@ export function mergeObject(
 	return retSorted;
 }
 export async function compareFilesModified(file1: FileInfo[], file2: FileInfo[]) {
-	const allBaseNames = unique([...file1.map(f => f.name), ...file2.map(f => f.name)]);
+	const allBaseNames = unique([...file1.map((f) => f.name), ...file2.map((f) => f.name)]);
 	const result: CompareResult = {
 		fileCountStatus: "same",
 		modifiedStatus: "same",
@@ -101,10 +98,9 @@ export async function compareFilesModified(file1: FileInfo[], file2: FileInfo[])
 	const comparable = allBaseNames.length == 1 && allBaseNames[0].endsWith(".json");
 	for (const baseName of allBaseNames) {
 		console.log(`Checking ${baseName}`);
-		const f1 = file1.find(f => f.name === baseName);
-		const f2 = file2.find(f => f.name === baseName);
+		const f1 = file1.find((f) => f.name === baseName);
+		const f2 = file2.find((f) => f.name === baseName);
 		if (f1 && f2) {
-
 			const diff = subtractTimeInLimitedResolution(f1.mtime, f2.mtime);
 			modifiedDiffs.push(diff);
 			const content1 = await vaultManager.readFile(f1);
@@ -124,7 +120,10 @@ export async function compareFilesModified(file1: FileInfo[], file2: FileInfo[])
 					}
 				}
 				if (f1.name.endsWith(".json")) {
-					if (vaultManager.nonMergeJsonPatterns.some(p => p.test(f1.name)) || vaultManager.nonMergeJsonPatterns.some(p => p.test(f2.name))) {
+					if (
+						vaultManager.nonMergeJsonPatterns.some((p) => p.test(f1.name)) ||
+						vaultManager.nonMergeJsonPatterns.some((p) => p.test(f2.name))
+					) {
 						result.JsonMergeResult = "not-json";
 					} else {
 						try {
@@ -151,13 +150,17 @@ export async function compareFilesModified(file1: FileInfo[], file2: FileInfo[])
 			}
 		}
 	}
-	if (modifiedDiffs.every(d => d === 0)) {
+	if (modifiedDiffs.every((d) => d === 0)) {
 		result.modifiedStatus = "same";
 	} else {
-		result.modifiedStatus = modifiedDiffs.every(d => d > 0) ? "allNewer" : modifiedDiffs.every(d => d < 0) ? "allOlder" : "mixed";
+		result.modifiedStatus = modifiedDiffs.every((d) => d > 0)
+			? "allNewer"
+			: modifiedDiffs.every((d) => d < 0)
+				? "allOlder"
+				: "mixed";
 	}
-	const k = Object.fromEntries(modifiedDiffs.map(d => [Math.abs(d), d]));
-	const maxDiff = Math.max(...modifiedDiffs.map(d => Math.abs(d)));
+	const k = Object.fromEntries(modifiedDiffs.map((d) => [Math.abs(d), d]));
+	const maxDiff = Math.max(...modifiedDiffs.map((d) => Math.abs(d)));
 	result.largestModifiedDifference = k[maxDiff];
 	result.averageModifiedDifference = modifiedDiffs.reduce((a, b) => a + b, 0) / modifiedDiffs.length;
 	return result;

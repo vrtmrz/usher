@@ -8,10 +8,10 @@ export class UsherView extends ItemView {
 		return VIEW_TYPE;
 	}
 	getDisplayText(): string {
-		return "Config Picker";
+		return "Usher";
 	}
 	getIcon(): string {
-		return "spanner";
+		return "wrench-screwdriver-glyph";
 	}
 
 	constructor(leaf: WorkspaceLeaf, plugin: UsherPlugin) {
@@ -20,13 +20,10 @@ export class UsherView extends ItemView {
 	component?: ReturnType<typeof mount>;
 
 	async onOpen() {
-		const app = mount(PluginViewComponent,
-			{
-				target: this.contentEl,
-				props: {
-
-				},
-			});
+		const app = mount(PluginViewComponent, {
+			target: this.contentEl,
+			props: {},
+		});
 		this.component = app;
 		return await Promise.resolve();
 	}

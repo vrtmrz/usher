@@ -27,15 +27,13 @@ export class VaultManager {
 		eventHub.on("setting-change", this.reloadSetting.bind(this));
 		this.reloadSetting();
 	}
-	onUnload() {
-
-	}
+	onUnload() {}
 	reloadSetting() {
 		this.ignoreRegExps = this.plugin.settings.ignoreFilePatterns.split("|[]|").map((e) => new RegExp(e, "ig"));
-		this.nonMergeJsonPatterns = this.plugin.settings.nonMergeJsonPatterns.split("|[]|").map((e) => new RegExp(e, "ig"));
+		this.nonMergeJsonPatterns = this.plugin.settings.nonMergeJsonPatterns
+			.split("|[]|")
+			.map((e) => new RegExp(e, "ig"));
 	}
-
-
 
 	getFileGroup(folder: string): {
 		category: CategoryType;
@@ -59,35 +57,52 @@ export class VaultManager {
 				fileCategory = "etc";
 			}
 			return {
-				category: "plugin", key: key, hasManifest: true, basePath: folderParts.slice(0, 2).join("/")
-				, filePath: folderParts.slice(2).join("/"), fileCategory
+				category: "plugin",
+				key: key,
+				hasManifest: true,
+				basePath: folderParts.slice(0, 2).join("/"),
+				filePath: folderParts.slice(2).join("/"),
+				fileCategory,
 			};
 		}
 		if (base === "themes" && folderParts.length > 2) {
 			return {
-				category: "theme", key: key, hasManifest: true, basePath: folderParts.slice(0, 2).join("/")
-				, filePath: folderParts.slice(2).join("/"), fileCategory: "theme"
-
+				category: "theme",
+				key: key,
+				hasManifest: true,
+				basePath: folderParts.slice(0, 2).join("/"),
+				filePath: folderParts.slice(2).join("/"),
+				fileCategory: "theme",
 			};
 		}
 		if (base == "snippets" && folderParts.length === 2) {
 			// Do not include snippets that are in subfolders
 			return {
-				category: "snippet", key: folderParts.slice(1).join("/"), hasManifest: false, basePath: folderParts.slice(0, 1).join("/")
-				, filePath: folderParts.slice(1).join("/"), fileCategory: "snippet"
-
+				category: "snippet",
+				key: folderParts.slice(1).join("/"),
+				hasManifest: false,
+				basePath: folderParts.slice(0, 1).join("/"),
+				filePath: folderParts.slice(1).join("/"),
+				fileCategory: "snippet",
 			};
 		}
 		if (folderParts.length === 1 && folder.endsWith(".json")) {
 			return {
-				category: "setting", key: folder, hasManifest: false, basePath: ""
-				, filePath: folder, fileCategory: "setting"
-
+				category: "setting",
+				key: folder,
+				hasManifest: false,
+				basePath: "",
+				filePath: folder,
+				fileCategory: "setting",
 			};
 		}
 		return {
-			category: "unknown", key: folder, hasManifest: false, basePath: "", filePath: folder,
-			fileCategory: "unknown"
+			category: "unknown",
+			key: folder,
+			hasManifest: false,
+			basePath: "",
+			filePath: folder,
+			fileCategory: "unknown",
 		};
 	}
 
@@ -151,7 +166,7 @@ export class VaultManager {
 					name: info.key, // once.
 					device: device,
 					hasManifest: info.hasManifest,
-					files: {}
+					files: {},
 				};
 			} else {
 				item = itemInfoMap.get(bastPath)!;
@@ -169,7 +184,6 @@ export class VaultManager {
 				console.error(ex);
 			}
 			item.files[info.fileCategory].push(fi);
-
 
 			if (info.hasManifest && pathItem.endsWith("manifest.json")) {
 				const manifestPath = pathItem;
@@ -189,7 +203,6 @@ export class VaultManager {
 			itemInfoMap.set(bastPath, item);
 		}
 		return { itemInfoMap, nameMap };
-
 	}
 
 	async updateStore() {
@@ -207,7 +220,7 @@ export class VaultManager {
 
 	async getAllDevices() {
 		const folders = (await this.app.vault.adapter.list("/")).folders;
-		const hiddenFolders = folders.filter((folder) => folder.startsWith(".")).filter(e => !e.startsWith(".trash"));
+		const hiddenFolders = folders.filter((folder) => folder.startsWith(".")).filter((e) => !e.startsWith(".trash"));
 		return hiddenFolders;
 	}
 
@@ -227,7 +240,7 @@ export class VaultManager {
 		for (const part of parts) {
 			current += "/" + part;
 			try {
-				if (!await this.app.vault.adapter.exists(current)) {
+				if (!(await this.app.vault.adapter.exists(current))) {
 					await this.app.vault.adapter.mkdir(current);
 				}
 			} catch (ex) {
@@ -238,8 +251,8 @@ export class VaultManager {
 	}
 
 	async mergeJsonFile(from: string, to: string) {
-		const fromContent = await this.loadTextFile(from) || "{}";
-		const toContent = await this.loadTextFile(to) || "{}";
+		const fromContent = (await this.loadTextFile(from)) || "{}";
+		const toContent = (await this.loadTextFile(to)) || "{}";
 		try {
 			const fromJson = JSON.parse(fromContent);
 			const toJson = JSON.parse(toContent);
@@ -268,9 +281,9 @@ export class VaultManager {
 	}
 	async copyDir(from: string, to: string) {
 		this.plugin.showNotice(`Copying ${from} to ${to}`, "config-duplicate-progress");
-		const files = (await this.app.vault.adapter.list(from));
+		const files = await this.app.vault.adapter.list(from);
 		try {
-			if (!await this.app.vault.adapter.exists(to)) {
+			if (!(await this.app.vault.adapter.exists(to))) {
 				await this.app.vault.adapter.mkdir(to);
 			}
 		} catch (ex) {

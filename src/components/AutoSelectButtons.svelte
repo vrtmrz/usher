@@ -1,13 +1,32 @@
 <script lang="ts">
-	import { onlyNew } from "../runestore.svelte";
+	import {
+		onlyNew,
+		nonAutomatic,
+		setNonAutomatic,
+		unsetNonAutomatic,
+	} from "../runestore.svelte";
 	import { eventHub } from "../events";
 
 	interface Props {
+		key?: string;
 		category: string;
 		hasManifest: boolean;
 		isJson: boolean;
 	}
-	const { category, hasManifest, isJson }: Props = $props();
+	const { category, hasManifest, isJson, key }: Props = $props();
+	let prev = key !== undefined ? $nonAutomatic.has(key) : false;
+	let shouldIgnore = $state(prev);
+
+	$effect(() => {
+		if (key !== undefined && prev !== shouldIgnore) {
+			prev = shouldIgnore;
+			if (shouldIgnore) {
+				setNonAutomatic(key);
+			} else {
+				unsetNonAutomatic(key);
+			}
+		}
+	});
 </script>
 
 <button onclick={() => eventHub.emitEvent("clear-selected-device", category)}
@@ -70,8 +89,23 @@
 			)}>⚡</button
 	>
 {/if}
+{#if key !== undefined}
+	<label>
+		<span data-tooltip="Locked for Automatic">🔒</span>
+		<input type="checkbox" bind:checked={shouldIgnore} />
+	</label>
+{/if}
 
 <style>
+	label {
+		margin-left: auto;
+		display: inline-flex;
+		align-items: center;
+		font-weight: initial;
+	}
+	label span {
+		margin-right: 0.25em;
+	}
 	button {
 		margin-right: 0.5em;
 	}
