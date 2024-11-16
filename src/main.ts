@@ -17,7 +17,7 @@ export default class UsherPlugin extends Plugin {
 
 		this.addCommand({
 			id: "show-view",
-			name: "Show Usher",
+			name: "Show Main View",
 			callback: async () => {
 				await this.showView();
 			},
