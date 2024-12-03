@@ -1,6 +1,6 @@
 {
 	"name": "usher",
-	"version": "0.0.3",
+	"version": "0.0.5",
 	"description": "The overridden config directory manager for Obsidian",
 	"main": "main.js",
 	"scripts": {
