@@ -17,7 +17,7 @@ export class UsherSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		new Setting(containerEl).setName("Comparison Control").setHeading();
+		new Setting(containerEl).setName("Comparison control").setHeading();
 
 		const ignoreEl = new Setting(containerEl).setName("Ignore files");
 
@@ -59,7 +59,7 @@ export class UsherSettingTab extends PluginSettingTab {
 
 		let configFolder = "";
 		new Setting(containerEl)
-			.setName("Duplicate Config folder")
+			.setName("Duplicate config folder")
 			.setDesc("Duplicate the config folder to another folder")
 			.addText((text) =>
 				text
@@ -82,7 +82,7 @@ export class UsherSettingTab extends PluginSettingTab {
 		const configFolders = (await vaultManager.getAllDevices()).filter((e) => e != this.app.vault.configDir);
 		let deleteFolder = "";
 		new Setting(containerEl)
-			.setName("Delete Other devices' config folder")
+			.setName("Delete other devices' config folder")
 			.setDesc("Quite dangerous. Be careful (In the meantime, it will be moved in `.trash`. Probably).")
 			.addDropdown((dropdown) =>
 				dropdown

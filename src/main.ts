@@ -17,14 +17,14 @@ export default class UsherPlugin extends Plugin {
 
 		this.addCommand({
 			id: "show-view",
-			name: "Show Usher",
+			name: "Show",
 			callback: async () => {
 				await this.showView();
 			},
 		});
 		this.addCommand({
 			id: "update-list",
-			name: "Rescan and update List",
+			name: "Rescan and update list",
 			callback: async () => {
 				await this.manager.updateStore();
 			},
