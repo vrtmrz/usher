@@ -80,7 +80,7 @@ export default class UsherPlugin extends Plugin {
 		// And activate it
 		await this.app.workspace.revealLeaf(theLeaf);
 	}
-	onunload() {}
+	onunload() { }
 
 	onExternalSettingsChange() {
 		this.loadSettings();
